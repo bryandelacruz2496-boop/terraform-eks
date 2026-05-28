@@ -13,3 +13,20 @@ module "eks" {
     Name = "eks-cluster"
   }
 }
+
+# Access entry for eks-test user (kubectl/developer access)
+resource "aws_eks_access_entry" "eks_test_user" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = "arn:aws:iam::767397778742:user/eks-test"
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "eks_test_admin" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = "arn:aws:iam::767397778742:user/eks-test"
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+}
