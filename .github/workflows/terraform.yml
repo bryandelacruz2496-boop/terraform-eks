@@ -12,10 +12,11 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  WORKING_DIR: src/workload-production
 
 jobs:
-  terraform-plan-vpc:
-    name: Terraform Plan (VPC)
+  terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
 
     steps:
@@ -29,24 +30,24 @@ jobs:
 
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: src/workload-production/vpc
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform Init
         run: terraform init
-        working-directory: src/workload-production/vpc
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: src/workload-production/vpc
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform Plan
         run: terraform plan -input=false
-        working-directory: src/workload-production/vpc
+        working-directory: ${{ env.WORKING_DIR }}
 
-  terraform-apply-vpc:
-    name: Terraform Apply (VPC)
+  terraform-apply:
+    name: Terraform Apply
     runs-on: ubuntu-latest
-    needs: terraform-plan-vpc
+    needs: terraform-plan
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment: production
 
@@ -61,62 +62,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: src/workload-production/vpc
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
-        working-directory: src/workload-production/vpc
-
-  terraform-plan-eks:
-    name: Terraform Plan (EKS)
-    runs-on: ubuntu-latest
-    needs: terraform-apply-vpc
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.5.7
-
-      - name: Terraform Format
-        run: terraform fmt -check
-        working-directory: src/workload-production/eks
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: src/workload-production/eks
-
-      - name: Terraform Validate
-        run: terraform validate
-        working-directory: src/workload-production/eks
-
-      - name: Terraform Plan
-        run: terraform plan -input=false
-        working-directory: src/workload-production/eks
-
-  terraform-apply-eks:
-    name: Terraform Apply (EKS)
-    runs-on: ubuntu-latest
-    needs: terraform-plan-eks
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment: production
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.5.7
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: src/workload-production/eks
-
-      - name: Terraform Apply
-        run: terraform apply -input=false -auto-approve
-        working-directory: src/workload-production/eks
+        working-directory: ${{ env.WORKING_DIR }}
