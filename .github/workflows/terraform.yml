@@ -33,6 +33,14 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Import existing S3 bucket
+        run: terraform import aws_s3_bucket.terraform_state terraform-cicd-bucket-git
+        continue-on-error: true
+
+      - name: Import existing DynamoDB table
+        run: terraform import aws_dynamodb_table.terraform_lock terraform-eks-lock
+        continue-on-error: true
+
       - name: Terraform Validate
         run: terraform validate
 
@@ -57,6 +65,14 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+
+      - name: Import existing S3 bucket
+        run: terraform import aws_s3_bucket.terraform_state terraform-cicd-bucket-git
+        continue-on-error: true
+
+      - name: Import existing DynamoDB table
+        run: terraform import aws_dynamodb_table.terraform_lock terraform-eks-lock
+        continue-on-error: true
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
