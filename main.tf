@@ -7,6 +7,14 @@ terraform {
       version = ">= 5.0"
     }
   }
+
+  backend "s3" {
+    bucket         = "terraform-cicd-bucket-git"
+    key            = "s3-state/terraform.tfstate"
+    region         = "ap-southeast-1"
+    dynamodb_table = "terraform-eks-lock"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
