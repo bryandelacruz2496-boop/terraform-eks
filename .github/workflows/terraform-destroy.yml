@@ -27,6 +27,11 @@ jobs:
         run: terraform init
         working-directory: src/workload-production
 
+      - name: Import eks-test access entry
+        run: terraform import aws_eks_access_entry.eks_test_user eks-cluster-new:arn:aws:iam::767397778742:user/eks-test
+        working-directory: src/workload-production
+        continue-on-error: true
+
       - name: Terraform Destroy
         run: terraform destroy -input=false -auto-approve
         working-directory: src/workload-production
