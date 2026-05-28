@@ -9,37 +9,32 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
 jobs:
-  destroy-workload:
-    name: Destroy Workload (VPC, EKS, ECR)
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.5.7
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: src/workload-production
-
-      - name: Import eks-test access entry
-        run: terraform import aws_eks_access_entry.eks_test_user eks-cluster-new:arn:aws:iam::767397778742:user/eks-test
-        working-directory: src/workload-production
-        continue-on-error: true
-
-      - name: Terraform Destroy
-        run: terraform destroy -input=false -auto-approve
-        working-directory: src/workload-production
+  # destroy-workload:
+  #   name: Destroy Workload (VPC, EKS, ECR)
+  #   runs-on: ubuntu-latest
+  #   environment: production
+  #
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v3
+  #       with:
+  #         terraform_version: 1.5.7
+  #
+  #     - name: Terraform Init
+  #       run: terraform init
+  #       working-directory: src/workload-production
+  #
+  #     - name: Terraform Destroy
+  #       run: terraform destroy -input=false -auto-approve
+  #       working-directory: src/workload-production
 
   destroy-state:
     name: Destroy S3 State & DynamoDB
     runs-on: ubuntu-latest
-    needs: destroy-workload
+    # needs: destroy-workload
     environment: production
 
     steps:
