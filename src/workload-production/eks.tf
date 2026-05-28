@@ -1,6 +1,7 @@
 module "eks" {
-  source       = "../../modules/eks"
-  cluster_name = "eks-cluster-new"
+  source          = "../../modules/eks"
+  cluster_name    = "eks-cluster-new"
+  cluster_version = "1.30"
 
   subnet_ids     = module.vpc.private_subnet_ids
   instance_types = ["t3.micro"]
