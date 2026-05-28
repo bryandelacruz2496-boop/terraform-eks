@@ -14,9 +14,45 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
 jobs:
-  terraform:
-    name: Terraform
+  terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Import existing S3 bucket
+        run: terraform import aws_s3_bucket.terraform_state terraform-cicd-bucket-git
+        continue-on-error: true
+
+      - name: Import existing DynamoDB table
+        run: terraform import aws_dynamodb_table.terraform_lock terraform-eks-lock
+        continue-on-error: true
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -input=false
+
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    needs: terraform-plan
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
 
     steps:
       - name: Checkout code
@@ -38,9 +74,5 @@ jobs:
         run: terraform import aws_dynamodb_table.terraform_lock terraform-eks-lock
         continue-on-error: true
 
-      - name: Terraform Plan
-        run: terraform plan -input=false
-
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -input=false -auto-approve
