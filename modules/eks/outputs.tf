@@ -28,7 +28,7 @@ output "oidc_provider_arn" {
   value       = aws_iam_openid_connect_provider.eks.arn
 }
 
-output "cluster_autoscaler_role_arn" {
-  description = "The ARN of the Cluster Autoscaler IAM role"
-  value       = aws_iam_role.cluster_autoscaler.arn
-}
+# output "cluster_autoscaler_role_arn" {
+#   description = "The ARN of the Cluster Autoscaler IAM role"
+#   value       = aws_iam_role.cluster_autoscaler.arn
+# }
