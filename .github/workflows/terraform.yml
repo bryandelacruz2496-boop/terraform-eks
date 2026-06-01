@@ -29,15 +29,19 @@ jobs:
 
       - name: Terraform Format
         run: terraform fmt -check
+        working-directory: src/workload-production
 
       - name: Terraform Init
         run: terraform init
+        working-directory: src/workload-production
 
       - name: Terraform Validate
         run: terraform validate
+        working-directory: src/workload-production
 
       - name: Terraform Plan
         run: terraform plan -input=false
+        working-directory: src/workload-production
 
   terraform-apply:
     name: Terraform Apply
@@ -57,6 +61,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        working-directory: src/workload-production
 
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
+        working-directory: src/workload-production

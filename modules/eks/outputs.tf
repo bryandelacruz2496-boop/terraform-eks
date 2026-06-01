@@ -22,3 +22,13 @@ output "node_group_id" {
   description = "The ID of the node group"
   value       = aws_eks_node_group.this.id
 }
+
+output "oidc_provider_arn" {
+  description = "The ARN of the OIDC provider"
+  value       = aws_iam_openid_connect_provider.eks.arn
+}
+
+output "cluster_autoscaler_role_arn" {
+  description = "The ARN of the Cluster Autoscaler IAM role"
+  value       = aws_iam_role.cluster_autoscaler.arn
+}
