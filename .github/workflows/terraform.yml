@@ -14,30 +14,9 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
 jobs:
-  bootstrap:
-    name: Bootstrap S3 & DynamoDB
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.5.7
-
-      - name: Terraform Init (Bootstrap)
-        run: terraform init
-
-      - name: Terraform Apply (S3 + DynamoDB)
-        run: terraform apply -input=false -auto-approve
-
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
-    needs: bootstrap
 
     steps:
       - name: Checkout code
