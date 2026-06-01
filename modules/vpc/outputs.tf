@@ -23,7 +23,7 @@ output "internet_gateway_id" {
   value       = aws_internet_gateway.this.id
 }
 
-output "nat_gateway_id" {
-  description = "The ID of the NAT Gateway"
-  value       = var.enable_nat_gateway ? aws_nat_gateway.this[0].id : null
-}
+# output "nat_gateway_id" {
+#   description = "The ID of the NAT Gateway"
+#   value       = var.enable_nat_gateway ? aws_nat_gateway.this[0].id : null
+# }

@@ -45,15 +45,15 @@ resource "aws_subnet" "private" {
   })
 }
 
-# Elastic IP for NAT Gateway
-resource "aws_eip" "nat" {
-  count  = var.enable_nat_gateway ? 1 : 0
-  domain = "vpc"
-
-  tags = merge(var.tags, {
-    Name = "${var.vpc_name}-nat-eip"
-  })
-}
+# Elastic IP for NAT Gateway (disabled)
+# resource "aws_eip" "nat" {
+#   count  = var.enable_nat_gateway ? 1 : 0
+#   domain = "vpc"
+#
+#   tags = merge(var.tags, {
+#     Name = "${var.vpc_name}-nat-eip"
+#   })
+# }
 
 # NAT Gateway
 # resource "aws_nat_gateway" "this" {
@@ -85,14 +85,6 @@ resource "aws_route_table" "public" {
 # Private Route Table
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
-
-  dynamic "route" {
-    for_each = var.enable_nat_gateway ? [1] : []
-    content {
-      cidr_block     = "0.0.0.0/0"
-      nat_gateway_id = aws_nat_gateway.this[0].id
-    }
-  }
 
   tags = merge(var.tags, {
     Name = "${var.vpc_name}-private-rt"

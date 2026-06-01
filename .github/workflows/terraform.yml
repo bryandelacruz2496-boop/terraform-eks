@@ -63,6 +63,9 @@ jobs:
         run: terraform init
         working-directory: src/workload-production
 
+      - name: Caution
+        run: echo "⚠️ REVIEW IT CAREFULLY FIRST BEFORE APPLYING TERRAFORM APPLY ⚠️"
+
       - name: Terraform Apply
         run: terraform apply -input=false -auto-approve
         working-directory: src/workload-production
