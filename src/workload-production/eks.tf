@@ -4,7 +4,7 @@ module "eks" {
   cluster_version = "1.30"
   region          = "ap-southeast-1"
 
-  subnet_ids     = module.vpc.private_subnet_ids
+  subnet_ids     = module.vpc.public_subnet_ids
   instance_types = ["t3.micro"]
   desired_size   = 2
   min_size       = 1
