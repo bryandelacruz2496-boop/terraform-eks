@@ -56,17 +56,17 @@ resource "aws_eip" "nat" {
 }
 
 # NAT Gateway
-resource "aws_nat_gateway" "this" {
-  count         = var.enable_nat_gateway ? 1 : 0
-  allocation_id = aws_eip.nat[0].id
-  subnet_id     = aws_subnet.public[0].id
+# resource "aws_nat_gateway" "this" {
+#   count         = var.enable_nat_gateway ? 1 : 0
+#   allocation_id = aws_eip.nat[0].id
+#   subnet_id     = aws_subnet.public[0].id
 
-  tags = merge(var.tags, {
-    Name = "${var.vpc_name}-nat"
-  })
+#   tags = merge(var.tags, {
+#     Name = "${var.vpc_name}-nat"
+#   })
 
-  depends_on = [aws_internet_gateway.this]
-}
+#   depends_on = [aws_internet_gateway.this]
+# }
 
 # Public Route Table
 resource "aws_route_table" "public" {
