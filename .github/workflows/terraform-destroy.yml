@@ -27,12 +27,8 @@ jobs:
         run: terraform init
         working-directory: src/workload-production
 
-      - name: Force Unlock State (one-time fix)
-        run: terraform force-unlock -force 31980bf4-02b5-29ca-1a3b-b6370c704e61
-        working-directory: src/workload-production
-
-      - name: Terraform Destroy
-        run: terraform destroy -input=false -auto-approve
+      - name: Force Unlock and Destroy
+        run: terraform force-unlock -force 9f031687-6ad3-96fa-d90b-68abf0521c78 && terraform destroy -input=false -auto-approve
         working-directory: src/workload-production
 
   destroy-state:
